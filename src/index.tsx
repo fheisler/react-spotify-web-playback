@@ -50,6 +50,7 @@ import Player from './components/Player';
 import Slider from './components/Slider';
 
 class SpotifyWebPlayer extends React.PureComponent<Props, State> {
+  private intervalId = 0;
   private isActive = false;
   private emptyTrack = {
     artists: '',
@@ -145,8 +146,22 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
     syncExternalDevice: false,
   };
 
+  private async timer() {
+    const { callback } = this.props;
+
+    if (callback) {
+      callback({
+        ...this.state,
+        type: TYPE.PROGRESS,
+      });
+    }
+  }
+
   public async componentDidMount() {
     this.isActive = true;
+
+    this.intervalId = window.setInterval(() => { this.timer() }, 100);
+
     const { top = 0 } = this.ref.current?.getBoundingClientRect() || {};
 
     this.updateState({
@@ -285,6 +300,8 @@ class SpotifyWebPlayer extends React.PureComponent<Props, State> {
   }
 
   public componentWillUnmount() {
+    clearInterval(this.intervalId);
+
     this.isActive = false;
 
     /* istanbul ignore else */

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { STATUS, TYPE } from './utils';
 import { Props, State } from './types';
 declare class SpotifyWebPlayer extends React.PureComponent<Props, State> {
+    private intervalId;
     private isActive;
     private emptyTrack;
     private getPlayOptions;
@@ -22,6 +23,7 @@ declare class SpotifyWebPlayer extends React.PureComponent<Props, State> {
         syncExternalDeviceInterval: number;
         syncExternalDevice: boolean;
     };
+    private timer;
     componentDidMount(): Promise<void>;
     componentDidUpdate(prevProps: Props, prevState: State): Promise<void>;
     componentWillUnmount(): void;
